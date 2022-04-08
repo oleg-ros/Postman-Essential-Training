@@ -1,0 +1,451 @@
+{
+	"info": {
+		"_postman_id": "2d19a8a3-1b4d-4611-92ba-f7bd69785c49",
+		"name": "Contact list",
+		"description": "Something something newTaskCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Basic Endpoints tests",
+			"item": [
+				{
+					"name": "get contact list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/JSON\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "add contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"contactId\", jsonData._id);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{FIRST_NAME}}\",\r\n    \"lastName\": \"{{LAST_NAME}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"location\": {\r\n        \"city\": \"{{city}}\",\r\n        \"country\": \"{{country}}\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"{{jobTitle}}\",\r\n    \t\"company\": \"{{company}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "get contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Correct contact is returned\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Carol@thinkingtester.com\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Correct first name is returned\", function () {\r",
+									"    pm.expect(jsonData.firstName).to.eql(environment.FIRST_NAME);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Correct last name is returned\", function () {\r",
+									"    pm.expect(jsonData.lastName).to.eql(environment.LAST_NAME);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Correct city is returned\", function () {\r",
+									"    pm.expect(jsonData.location.city).to.eql(environment.city);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_URL_2}}/contacts/{{contactId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "update contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Oleg\",\r\n    \"lastName\": \"Ros\",\r\n    \"email\": \"Oleg.Ros@amazon.ca\",\r\n    \"location\": {\r\n        \"city\": \"Vancouver, BC\",\r\n        \"country\": \"Canada\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"Automation Software Tester\",\r\n    \t\"company\": \"Amazon\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts/{{contactId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "delete contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{BASE_URL_2}}/contacts/{{contactId}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative tests",
+			"item": [
+				{
+					"name": "get contact not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_URL_2}}/contacts/1"
+					},
+					"response": []
+				},
+				{
+					"name": "add contact missing first name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Missing first name error is returned\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"First Name is required\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"\",\r\n    \"lastName\": \"Smith\",\r\n    \"email\": \"asmith@thinkingtester.com\",\r\n    \"location\": {\r\n        \"city\": \"Boston, MA\",\r\n        \"country\": \"USA\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"Software Tester\",\r\n    \t\"company\": \"Microsoft\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "add contact Company to long",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Amy\",\r\n    \"lastName\": \"Smith\",\r\n    \"email\": \"asmith@thinkingtester.com\",\r\n    \"location\": {\r\n        \"city\": \"Boston, MA\",\r\n        \"country\": \"USA\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"Software Tester\",\r\n    \t\"company\": \"qwertyuiopasdfghjklzxcvbnmqwert\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "add contact last name invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Amy\",\r\n    \"lastName\": \"Smith:\",\r\n    \"email\": \"asmith@thinkingtester.com\",\r\n    \"location\": {\r\n        \"city\": \"Boston, MA\",\r\n        \"country\": \"USA\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"Software Tester\",\r\n    \t\"company\": \"Microsoft\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "add contact invalid email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Amy\",\r\n    \"lastName\": \"Smith\",\r\n    \"email\": \"asmith@thinkingtester\",\r\n    \"location\": {\r\n        \"city\": \"Boston, MA\",\r\n        \"country\": \"USA\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"Software Tester\",\r\n    \t\"company\": \"Microsoft\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "add contact email is missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"contactId\", jsonData._id);\r",
+									"\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error message\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Contacts validation failed: email: Email is required\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{FIRST_NAME}}\",\r\n    \"lastName\": \"{{LAST_NAME}}\",\r\n    \"email\": \"\",\r\n    \"location\": {\r\n        \"city\": \"{{city}}\",\r\n        \"country\": \"{{country}}\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"{{jobTitle}}\",\r\n    \t\"company\": \"{{company}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "add contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"contactId\", jsonData._id);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{FIRST_NAME}}\",\r\n    \"lastName\": \"{{LAST_NAME}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"location\": {\r\n        \"city\": \"{{city}}\",\r\n        \"country\": \"{{country}}\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"{{jobTitle}}\",\r\n    \t\"company\": \"{{company}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts"
+					},
+					"response": []
+				},
+				{
+					"name": "update contact missing email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Error message\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Contacts validation failed: email: Email is required\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Oleg\",\r\n    \"lastName\": \"Ros\",\r\n    \"email\": \"\",\r\n    \"location\": {\r\n        \"city\": \"Vancouver, BC\",\r\n        \"country\": \"Canada\"\r\n    },\r\n    \"employer\": {\r\n    \t\"jobTitle\": \"Automation Software Tester\",\r\n    \t\"company\": \"Amazon\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_URL_2}}/contacts/{{contactId}}"
+					},
+					"response": []
+				}
+			],
+			"description": "Something something TICKETS FOLDER"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response time is less than 6000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(6000);",
+					"});"
+				]
+			}
+		}
+	]
+}
